@@ -12,6 +12,7 @@ c1i = []
 c2i = []
 
 p = 2
+max_der = 10**5
 
 def savevalwc(xi_, v1i_, v2i_, v12i_, v22i_, olp1i_, olp2i_, c1i_, c2i_):
     global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i
@@ -36,6 +37,17 @@ def saveval(xi_, v1i_, v2i_):
     olp2i.append(0)
     c1i.append(0)
     c2i.append(0)
+
+def eraseEnd():
+    xi.pop()
+    v1i.pop()
+    v2i.pop()
+    v12i.pop()
+    v22i.pop()
+    olp1i.pop()
+    olp2i.pop()
+    c1i.pop()
+    c2i.pop()
 
 def getMatr():
     return [
@@ -106,6 +118,35 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
 
         return xnext, v1next, v2next, h
 
+def RK4(f1, f2, h, x, v1, v2, n, b, eb):
+    saveval(x, v1, v2)
+    oldx = x
+    oldv1 = v1
+    oldv2 = v2
+
+    for i in range(1, n + 1):
+        x, v1, v2 = step(f1, f2, h, x, v1, v2)
+        if f1(x, v1, v2) > max_der or f2(x, v1, v2) > max_der or x >= b - eb and x <= b:
+            return
+        elif x > b:
+            eraseEnd()
+            x, v1, v2 = step(f1, f2, b - oldx, oldx, oldv1, oldv2)
+            saveval(x, v1, v2)
+
+def RK4WC(f1, f2, h, x, v1, v2, n, b, eb, e, maxeabs_):
+    saveval(x, v1, v2)
+    oldx = x
+    oldv1 = v1
+    oldv2 = v2
+
+    for i in range(1, n + 1):
+        x, v1, v2 = stepWC(f1, f2, h, x, v1, v2, e, maxeabs_)
+        if f1(x, v1, v2) > max_der or f2(x, v1, v2) > max_der or x >= b - eb and x <= b:
+            return
+        elif x > b:
+            eraseEnd()
+            x, v1, v2 = step(f1, f2, b - oldx, oldx, oldv1, oldv2)
+            saveval(x, v1, v2)
 
 
 u10 = 7
@@ -115,4 +156,6 @@ func1 = createfunc1(matr)
 func2 = createfunc2(matr)
 tmp = np.linalg.eig(matr)
 maxeabs = max([abs(e) for e in np.linalg.eig(matr)[0]])
+
+
 
