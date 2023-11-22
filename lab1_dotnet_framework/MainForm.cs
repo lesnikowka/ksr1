@@ -37,8 +37,8 @@ namespace lab1_dotnet_framework
 
         private Dictionary<Tuple<double, double, double>, List<Series>> SeriesForStartConditions = new Dictionary<Tuple<double, double, double>, List<Series>>();
 
-        private TaskType selectedTask = TaskType.Main1;
-        private string currentTableDB = "main1";
+        private TaskType selectedTask = TaskType.Main2;
+        private string currentTableDB = "main2";
 
         private string bdFolder = "/../../../database/lab1.sqlite3";
         private string scriptFolder = "\\..\\..\\..\\script";
@@ -65,7 +65,7 @@ namespace lab1_dotnet_framework
         {
             try
             {
-                StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + scriptFolder + "/RK.py");
+                StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + scriptFolder + "/RK2.py");
                 sr.Close();
             }
             catch
@@ -162,7 +162,7 @@ namespace lab1_dotnet_framework
             dataGridView2.Columns["Делений"].Width = 95;
             dataGridView2.Columns["Удвоений"].Width = 95;
 
-            showStartConditions("main1");
+            showStartConditions(currentTableDB);
 
             textBox8.Enabled = false;
             textBox9.Enabled = false;
@@ -273,7 +273,7 @@ namespace lab1_dotnet_framework
             Process methodProcess = new Process();
 
             infoStartProcess.WorkingDirectory = Directory.GetCurrentDirectory() + getScriptFolder();
-            infoStartProcess.FileName = "RK.py";
+            infoStartProcess.FileName = "RK2.py";
             infoStartProcess.Arguments = args;
             infoStartProcess.WindowStyle = ProcessWindowStyle.Hidden;
 

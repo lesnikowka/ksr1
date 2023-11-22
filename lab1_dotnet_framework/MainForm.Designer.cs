@@ -182,7 +182,7 @@
             this.выборТипаЗадачиToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1924, 36);
+            this.menuStrip1.Size = new System.Drawing.Size(1924, 33);
             this.menuStrip1.TabIndex = 8;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -190,7 +190,7 @@
             // 
             this.dsaToolStripMenuItem.Name = "dsaToolStripMenuItem";
             this.dsaToolStripMenuItem.ShowShortcutKeys = false;
-            this.dsaToolStripMenuItem.Size = new System.Drawing.Size(189, 30);
+            this.dsaToolStripMenuItem.Size = new System.Drawing.Size(189, 29);
             this.dsaToolStripMenuItem.Text = "Выбор типа задачи:";
             // 
             // выборТипаЗадачиToolStripMenuItem
@@ -200,27 +200,27 @@
             this.основнаяToolStripMenuItem,
             this.основная2ToolStripMenuItem});
             this.выборТипаЗадачиToolStripMenuItem.Name = "выборТипаЗадачиToolStripMenuItem";
-            this.выборТипаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(124, 30);
-            this.выборТипаЗадачиToolStripMenuItem.Text = "Основная 1";
+            this.выборТипаЗадачиToolStripMenuItem.Size = new System.Drawing.Size(124, 29);
+            this.выборТипаЗадачиToolStripMenuItem.Text = "Основная 2";
             // 
             // тестоваяToolStripMenuItem
             // 
             this.тестоваяToolStripMenuItem.Name = "тестоваяToolStripMenuItem";
-            this.тестоваяToolStripMenuItem.Size = new System.Drawing.Size(210, 34);
+            this.тестоваяToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.тестоваяToolStripMenuItem.Text = "Тестовая";
             this.тестоваяToolStripMenuItem.Click += new System.EventHandler(this.тестоваяToolStripMenuItem_Click);
             // 
             // основнаяToolStripMenuItem
             // 
             this.основнаяToolStripMenuItem.Name = "основнаяToolStripMenuItem";
-            this.основнаяToolStripMenuItem.Size = new System.Drawing.Size(210, 34);
+            this.основнаяToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.основнаяToolStripMenuItem.Text = "Основная 1";
             this.основнаяToolStripMenuItem.Click += new System.EventHandler(this.основнаяToolStripMenuItem_Click);
             // 
             // основная2ToolStripMenuItem
             // 
             this.основная2ToolStripMenuItem.Name = "основная2ToolStripMenuItem";
-            this.основная2ToolStripMenuItem.Size = new System.Drawing.Size(210, 34);
+            this.основная2ToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.основная2ToolStripMenuItem.Text = "Основная 2";
             this.основная2ToolStripMenuItem.Click += new System.EventHandler(this.основная2ToolStripMenuItem_Click);
             // 
