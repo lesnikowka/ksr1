@@ -164,9 +164,9 @@ namespace lab1_dotnet_framework
 
             showStartConditions(currentTableDB);
 
-            textBox8.Enabled = false;
+            /*textBox8.Enabled = false;
             textBox9.Enabled = false;
-            textBox10.Enabled = false;
+            textBox10.Enabled = false;*/
         }
 
         private int catchParams(ref double X0, ref double U0, ref double U0der, ref double startStep, ref double localPrecision, ref double boundPrecision, ref double integrationBound, ref int maxStepNumbers, ref bool withControl, ref double a, ref double b, ref double c)
@@ -229,7 +229,7 @@ namespace lab1_dotnet_framework
         {
             ProcessStartInfo deleteInfoStartProcess = new ProcessStartInfo();
 
-            Process deleteValuesProcess = new Process();
+            /*Process deleteValuesProcess = new Process();
 
             deleteInfoStartProcess.WorkingDirectory = Directory.GetCurrentDirectory() + getScriptFolder();
             deleteInfoStartProcess.FileName = "clear_tables.py";
@@ -239,7 +239,7 @@ namespace lab1_dotnet_framework
 
             deleteValuesProcess.Start();
 
-            deleteValuesProcess.WaitForExit();
+            deleteValuesProcess.WaitForExit();*/
 
             double X0 = 0, U0 = 0, U0der = 0, startStep = 0, localPrecision = 0, boundPrecision = 0, integrationBound = 0, a = 0, b = 0, c = 0;
             int maxStepNumbers = 0;
@@ -696,89 +696,6 @@ namespace lab1_dotnet_framework
         private void button2_Click(object sender, EventArgs e)
         {
             executeMethod();
-        }
-
-        private void тестоваяToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            выборТипаЗадачиToolStripMenuItem.Text = "Тестовая";
-            selectedTask = TaskType.Test;
-            this.chart1.Series.Clear();
-            this.chart2.Series.Clear();
-            this.chart3.Series.Clear();
-
-            if (!table.Columns.Contains("u") && !table.Columns.Contains("|u-v|"))
-            {
-                table.Columns.Add("u", typeof(string));
-                table.Columns.Add("|u-v|", typeof(string));
-
-                dataGridView1.Columns["|u-v|"].Width = 200;
-            }
-
-            table.Rows.Clear();
-
-            showStartConditions("test");
-
-            currentTableDB = "test";
-
-            table.Rows.Clear();
-
-            textBox8.Enabled = false;
-            textBox9.Enabled = false;
-            textBox10.Enabled = false;
-            textBox11.Enabled = false;
-        }
-
-        private void основнаяToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            выборТипаЗадачиToolStripMenuItem.Text = "Основная 1";
-            selectedTask = TaskType.Main1;
-            this.chart1.Series.Clear();
-            this.chart2.Series.Clear();
-            this.chart3.Series.Clear();
-
-            if (table.Columns.Contains("u") && table.Columns.Contains("|u-v|"))
-            {
-                table.Columns.Remove("u");
-                table.Columns.Remove("|u-v|");
-            }
-
-
-            table.Rows.Clear();
-
-            showStartConditions("main1");
-
-            currentTableDB = "main1";
-
-            textBox8.Enabled = false;
-            textBox9.Enabled = false;
-            textBox10.Enabled = false;
-            textBox11.Enabled = false;
-        }
-        private void основная2ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            выборТипаЗадачиToolStripMenuItem.Text = "Основная 2";
-            selectedTask = TaskType.Main2;
-            this.chart1.Series.Clear();
-            this.chart2.Series.Clear();
-            this.chart3.Series.Clear();
-
-            if (table.Columns.Contains("u") && table.Columns.Contains("|u-v|"))
-            {
-                table.Columns.Remove("u");
-                table.Columns.Remove("|u-v|");
-            }
-
-
-            table.Rows.Clear();
-
-            showStartConditions("main2");
-
-            currentTableDB = "main2";
-
-            textBox8.Enabled = true;
-            textBox9.Enabled = true;
-            textBox10.Enabled = true;
-            textBox11.Enabled = true;
         }
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
