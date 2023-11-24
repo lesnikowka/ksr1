@@ -153,16 +153,34 @@ def RK4WC(f1, f2, h, x, v1, v2, n, b, eb, e, maxeabs_):
             x, v1, v2, h = stepWC(f1, f2, b - oldx, oldx, oldv1, oldv2, e, maxeabs_)
             saveval(x, v1, v2, h)
 
+def trueSol1(alpha_, x):
+    return -alpha_[0] * np.exp(-1000.0 * x) + alpha_[1] * np.exp(-0.01 * x)
+
+def trueSol2(alpha_, x):
+    return alpha_[0] * np.exp(-1000.0 * x) + alpha_[1] * np.exp(-0.01 * x)
+
 x0 = 0
 u10 = 7
 u20 = 13
 matr = getMatr()
+print(matr)
 func1 = createfunc1(matr)
 func2 = createfunc2(matr)
-maxeabs = max([abs(e) for e in np.linalg.eig(matr)[0]])
+val, sup = np.linalg.eig(matr)
+maxeabs = max([abs(e) for e in val])
+print(maxeabs)
+#vec1 = [sup[0][0], sup[1][0]]
+#vec2 = [sup[0][1], sup[1][1]]
+vec1 = [-1, 1]
+vec2 = [1, 1]
+coefmatr = [[vec1[0],vec2[0]], [vec1[1],vec2[1]]]
+print(coefmatr)
+print(u10, u20)
+alpha = np.linalg.solve(coefmatr, [u10, u20])
+print("alpha  ", alpha)
 Eb = 10**-6
 E = 10**-3
-bound = 0.05
+bound = 0.01
 h_ = 10**-2
 N = 100000
 
@@ -174,11 +192,17 @@ RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
 
 plt.figure(figsize=(12, 5))
 
+y1 = [trueSol1(alpha, xx) for xx in xi]
+y2 = [trueSol1(alpha, xx) for xx in xi]
+
 plt.subplot(131)
 plt.plot(xi, v1i)
+plt.plot(xi, y1)
 plt.subplot(132)
 plt.plot(xi, v2i)
+plt.plot(xi, y2)
 plt.subplot(133)
 plt.plot(v1i, v2i)
+plt.plot(y1, y2)
 plt.show()
 
