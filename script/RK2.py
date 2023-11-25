@@ -14,6 +14,7 @@ hi = []
 
 p = 2
 max_der = 10**5
+frigid_prec = 10**-5
 
 def savevalwc(xi_, v1i_, v2i_, v12i_, v22i_, olp1i_, olp2i_, c1i_, c2i_, hi_):
     global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i
@@ -72,11 +73,12 @@ def createfunc2(matr_):
     return func
 
 def step(f1, f2, h, x, v1, v2, wc=False):
-    fn = f1(x, v1, v2)
-    f1next = f1(x + h, v1 + h * fn, v2 + h * fn)
-    f2next = f2(x + h, v1 + h * fn, v2 + h * fn)
-    v1next = v1 + (h / 2) * (fn + f1next)
-    v2next = v2 + (h / 2) * (fn + f2next)
+    f1n = f1(x, v1, v2)
+    f2n = f2(x, v1, v2)
+    f1next = f1(x + h, v1 + h * f1n, v2 + h * f2n)
+    f2next = f2(x + h, v1 + h * f1n, v2 + h * f2n)
+    v1next = v1 + (h / 2) * (f1n + f1next)
+    v2next = v2 + (h / 2) * (f2n + f2next)
     x += h
     if not wc:
         saveval(x, v1next, v2next, h)
@@ -93,7 +95,8 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
 
     divisions = 0
 
-    while h >= 2 / maxeabs_:
+    while h >= 2. / maxeabs_ - frigid_prec:
+        print(10000)
         h /= 2
         divisions += 1
 
@@ -101,7 +104,7 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
         savevalwc(xnext, v1next, v2next, v12next, v22next, s1, s2, divisions, 0, h)
         return xnext, v1next, v2next, h
     elif s <= minbound:
-        if h >= 1 / maxeabs_:
+        if 2 * h >= 2 / maxeabs_ - frigid_prec:
             savevalwc(xnext, v1next, v2next, v12next, v22next, s1, s2, divisions, 0, h)
             return xnext, v1next, v2next, h
         else:
@@ -113,7 +116,7 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
             divisions += 1
             xnext, v1next, v2next = step(f1, f2, h, x, v1, v2, True)
             x1half, v1half, v2half = step(f1, f2, h / 2, x, v1, v2, True)
-            x12next, v12next, v22next = step(f1, f2, h, x1half, v1half, v2half, True)
+            x12next, v12next, v22next = step(f1, f2, h / 2, x1half, v1half, v2half, True)
             s1 = abs(v1next - v12next)
             s2 = abs(v2next - v22next)
             s = max(s1, s2)
@@ -178,8 +181,8 @@ print(coefmatr)
 print(u10, u20)
 alpha = np.linalg.solve(coefmatr, [u10, u20])
 print("alpha  ", alpha)
-Eb = 10**-6
-E = 10**-3
+Eb = 10**-5
+E = 10**-4
 bound = 0.01
 h_ = 10**-2
 N = 100000
@@ -193,16 +196,21 @@ RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
 plt.figure(figsize=(12, 5))
 
 y1 = [trueSol1(alpha, xx) for xx in xi]
-y2 = [trueSol1(alpha, xx) for xx in xi]
+y2 = [trueSol2(alpha, xx) for xx in xi]
 
-plt.subplot(131)
+plt.subplot(141)
 plt.plot(xi, v1i)
 plt.plot(xi, y1)
-plt.subplot(132)
+plt.subplot(142)
 plt.plot(xi, v2i)
 plt.plot(xi, y2)
-plt.subplot(133)
+plt.subplot(143)
 plt.plot(v1i, v2i)
 plt.plot(y1, y2)
+plt.subplot(144)
+xxx = np.arange(0, 1000, 0.01)
+plt.plot(xxx, [trueSol2(alpha, i) for i in xxx])
 plt.show()
+
+
 
