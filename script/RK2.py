@@ -93,6 +93,7 @@ def saveval(xi_, v1i_, v2i_, hi_):
 '''
 
 def eraseEnd():
+    global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i, hi
     xi.pop()
     v1i.pop()
     v2i.pop()
