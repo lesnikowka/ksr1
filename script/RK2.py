@@ -240,7 +240,7 @@ savetodb()
 
 #RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
 #RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
-
+'''
 plt.figure(figsize=(12, 5))
 
 y1 = [trueSol1(alpha, xx) for xx in xi]
@@ -260,4 +260,5 @@ plt.subplot(144)
 xxx = np.arange(0, 1000, 0.01)
 plt.plot(xxx, [trueSol2(alpha, i) for i in xxx])
 plt.show()
+'''
 
