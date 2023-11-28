@@ -89,20 +89,20 @@ namespace lab1_dotnet_framework
             chart3.ChartAreas[0].AxisX.LabelStyle.Format = "0.00001";
 
             chart1.ChartAreas[0].AxisX.Title = "X";
-            chart1.ChartAreas[0].AxisY.Title = "U";
+            chart1.ChartAreas[0].AxisY.Title = "U1";
 
             chart1.ChartAreas[0].AxisX.TitleFont = new Font("Arial", 14);
             chart1.ChartAreas[0].AxisY.TitleFont = new Font("Arial", 14);
 
 
             chart3.ChartAreas[0].AxisX.Title = "X";
-            chart3.ChartAreas[0].AxisY.Title = "U'";
+            chart3.ChartAreas[0].AxisY.Title = "U2";
 
             chart2.ChartAreas[0].AxisX.TitleFont = new Font("Arial", 14);
             chart2.ChartAreas[0].AxisY.TitleFont = new Font("Arial", 14);
 
-            chart2.ChartAreas[0].AxisX.Title = "U";
-            chart2.ChartAreas[0].AxisY.Title = "U'";
+            chart2.ChartAreas[0].AxisX.Title = "U1";
+            chart2.ChartAreas[0].AxisY.Title = "U2";
 
             chart3.ChartAreas[0].AxisX.TitleFont = new Font("Arial", 14);
             chart3.ChartAreas[0].AxisY.TitleFont = new Font("Arial", 14);
@@ -168,7 +168,7 @@ namespace lab1_dotnet_framework
             textBox10.Enabled = false;*/
         }
 
-        private int catchParams(ref double X0, ref double U0, ref double U0der, ref double startStep, ref double localPrecision, ref double boundPrecision, ref double integrationBound, ref int maxStepNumbers, ref bool withControl, ref double a, ref double b, ref double c)
+        private int catchParams(ref double X0, ref double U0, ref double U0der, ref double startStep, ref double localPrecision, ref double boundPrecision, ref double integrationBound, ref int maxStepNumbers, ref bool withControl)
         {
             string x0Text = pointsToCommas(textBox1.Text);
             string u0Text = pointsToCommas(textBox2.Text);
@@ -177,16 +177,15 @@ namespace lab1_dotnet_framework
             string boundPrecisionText = pointsToCommas(textBox5.Text);
             string maxStepNumbersText = pointsToCommas(textBox6.Text);
             string integrationBoundText = pointsToCommas(textBox7.Text);
-            string aText = pointsToCommas(textBox8.Text);
-            string bText = pointsToCommas(textBox9.Text);
-            string cText = pointsToCommas(textBox10.Text);
+            //string aText = pointsToCommas(textBox8.Text);
+            //string bText = pointsToCommas(textBox9.Text);
+            //string cText = pointsToCommas(textBox10.Text);
             string u0derText = pointsToCommas(textBox11.Text);
 
             if (x0Text.Length == 0 || u0Text.Length == 0 ||
                 startStepText.Length == 0 || localPrecisionText.Length == 0 ||
                 boundPrecisionText.Length == 0 || maxStepNumbersText.Length == 0 ||
-                integrationBoundText.Length == 0 || aText.Length == 0 || bText.Length == 0 || 
-                cText.Length == 0 || u0derText.Length == 0
+                integrationBoundText.Length == 0 || u0derText.Length == 0
                 )
             {
                 MessageBox.Show("Вы ввели не все параметры", "Ошибка");
@@ -202,9 +201,6 @@ namespace lab1_dotnet_framework
                 boundPrecision = Convert.ToDouble(boundPrecisionText);
                 maxStepNumbers = Convert.ToInt32(maxStepNumbersText);
                 integrationBound = Convert.ToDouble(integrationBoundText);
-                a = Convert.ToDouble(aText);
-                b = Convert.ToDouble(bText);
-                c = Convert.ToDouble(cText);
                 U0der = Convert.ToDouble(u0derText);
             }
             catch
@@ -228,7 +224,7 @@ namespace lab1_dotnet_framework
         {
             ProcessStartInfo deleteInfoStartProcess = new ProcessStartInfo();
 
-            /*Process deleteValuesProcess = new Process();
+            Process deleteValuesProcess = new Process();
 
             deleteInfoStartProcess.WorkingDirectory = Directory.GetCurrentDirectory() + getScriptFolder();
             deleteInfoStartProcess.FileName = "clear_tables.py";
@@ -238,15 +234,15 @@ namespace lab1_dotnet_framework
 
             deleteValuesProcess.Start();
 
-            deleteValuesProcess.WaitForExit();*/
+            deleteValuesProcess.WaitForExit();
 
-            double X0 = 0, U0 = 0, U0der = 0, startStep = 0, localPrecision = 0, boundPrecision = 0, integrationBound = 0, a = 0, b = 0, c = 0;
+            double X0 = 0, U0 = 0, U0der = 0, startStep = 0, localPrecision = 0, boundPrecision = 0, integrationBound = 0;
             int maxStepNumbers = 0;
             bool withControl = true;
 
             string tableName = getTableString();
 
-            int valid = catchParams(ref X0, ref U0, ref U0der, ref startStep, ref localPrecision, ref boundPrecision, ref integrationBound, ref maxStepNumbers, ref withControl, ref a, ref b, ref c);
+            int valid = catchParams(ref X0, ref U0, ref U0der, ref startStep, ref localPrecision, ref boundPrecision, ref integrationBound, ref maxStepNumbers, ref withControl);
 
             if (valid != 0) return;
             if (tableName != "main2") U0der = 0;
@@ -260,10 +256,10 @@ namespace lab1_dotnet_framework
             args += toStringPoint(localPrecision) + " ";
             args += toStringPoint(boundPrecision) + " ";
             args += (withControl ? 1 : 0).ToString() +  " ";
-            args += toStringPoint(a) + " ";
-            args += toStringPoint(b) + " ";
-            args += toStringPoint(c) + " ";
-            args += tableName + " ";
+            //args += toStringPoint(a) + " ";
+            //args += toStringPoint(b) + " ";
+            //args += toStringPoint(c) + " ";
+            //args += tableName + " ";
             args += toStringPoint(integrationBound) + " ";
             args += toStringPoint(U0der) + " ";
 
@@ -288,10 +284,10 @@ namespace lab1_dotnet_framework
 
             int cntrl = checkBox1.Checked ? 1 : 0;
 
-            db.SaveParameters(new List<string> { toStringPoint(X0), toStringPoint(U0), toStringPoint(U0der), toStringPoint(integrationBound),
-                toStringPoint(startStep), toStringPoint(localPrecision), toStringPoint(boundPrecision),
-                maxStepNumbers.ToString(), toStringPoint(a), toStringPoint(b), toStringPoint(c), cntrl.ToString()
-            }, tableName);
+            //db.SaveParameters(new List<string> { toStringPoint(X0), toStringPoint(U0), toStringPoint(U0der), toStringPoint(integrationBound),
+            //    toStringPoint(startStep), toStringPoint(localPrecision), toStringPoint(boundPrecision),
+            //    maxStepNumbers.ToString(), toStringPoint(a), toStringPoint(b), toStringPoint(c), cntrl.ToString()
+            //}, tableName);
 
 
             richTextBox1.Text = getInfo(table, cntrl == 1);
@@ -628,33 +624,6 @@ namespace lab1_dotnet_framework
             return resultInfo;
         }
 
-        private void showParameters(List<string> startCondition) 
-        {
-            string tableName = getTableString();
-
-            List<string> parameters = db.GetParameters(tableName, startCondition);
-
-            textBox1.Text = parameters[1];
-            textBox2.Text = parameters[2];
-            textBox11.Text = parameters[3];
-            textBox7.Text = parameters[4];
-            textBox3.Text = parameters[5];
-            textBox4.Text = parameters[6];
-            textBox5.Text = parameters[7];
-            textBox6.Text = parameters[8];
-            textBox8.Text = parameters[9];
-            textBox9.Text = parameters[10];
-            textBox10.Text = parameters[11];
-
-            int cntrl = Convert.ToInt32(parameters[12]);
-
-            if (cntrl == 1)
-                checkBox1.Checked = true;
-
-            else
-                checkBox1.Checked = false;
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             this.chart1.Series.Clear();
@@ -672,6 +641,16 @@ namespace lab1_dotnet_framework
         private void dsaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             (new Help()).Show();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

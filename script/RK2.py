@@ -46,8 +46,8 @@ def catchParsFromCmd():
     #B = float(sys.argv[9])
     #C = float(sys.argv[10])
     #taskType = sys.argv[11]
-    bound = float(sys.argv[12])
-    u20 = float(sys.argv[13])
+    bound = float(sys.argv[8])
+    u20 = float(sys.argv[9])
 
 def savetodb():
     connection = sqlite3.connect("../database/lab1.sqlite3")
@@ -62,6 +62,7 @@ def savetodb():
                             [[v2i[i], x0, u10, i, xi[i], v2i[i], v22i[i], abs(v2i[i]-v22i[i]), olp2i[i],
                             hi[i], c2i[i], c1i[i], u20]])
 
+    connection.commit()
 
 def savevalwc(xi_, v1i_, v2i_, v12i_, v22i_, olp1i_, olp2i_, c1i_, c2i_, hi_):
     global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i
@@ -237,15 +238,14 @@ else:
 
 savetodb()
 
-
-'''
-RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
-RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
+#RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
+#RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
 
 plt.figure(figsize=(12, 5))
 
 y1 = [trueSol1(alpha, xx) for xx in xi]
 y2 = [trueSol2(alpha, xx) for xx in xi]
+
 
 plt.subplot(141)
 plt.plot(xi, v1i)
@@ -260,5 +260,4 @@ plt.subplot(144)
 xxx = np.arange(0, 1000, 0.01)
 plt.plot(xxx, [trueSol2(alpha, i) for i in xxx])
 plt.show()
-'''
 
