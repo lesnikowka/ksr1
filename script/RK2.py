@@ -22,11 +22,11 @@ WC = True
 x0 = 0
 u10 = 7
 u20 = 13
-Eb = 10**-5
+Eb = 10**-7
 E = 10**-4
 bound = 0.01
 h_ = 10**-3
-N = 10000
+N = 100000
 
 def catchParsFromCmd():
     global x0, u10, u20, Eb, E, bound, h_, N, WC
@@ -212,7 +212,8 @@ def RK4WC(f1, f2, h, x, v1, v2, n, b, eb, e, maxeabs_):
             return
         elif x > b:
             eraseEnd()
-            x, v1, v2, h = stepWC(f1, f2, b - oldx, oldx, oldv1, oldv2, e, maxeabs_)
+            stepWC(f1, f2, b - oldx, oldx, oldv1, oldv2, e, maxeabs_)
+            return
 
 def trueSol1(alpha_, x):
     return -alpha_[0] * np.exp(-1000.0 * x) + alpha_[1] * np.exp(-0.01 * x)
@@ -236,6 +237,8 @@ if WC:
     RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
 else:
     RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
+
+
 
 savetodb()
 
