@@ -1,5 +1,11 @@
 from matplotlib import pyplot as plt
 import numpy as np
+import sqlite3
+import sys
+
+p = 2
+max_der = 10**5
+frigid_prec = 10**-5
 
 xi = []
 v1i = []
@@ -12,9 +18,50 @@ c1i = []
 c2i = []
 hi = []
 
-p = 2
-max_der = 10**5
-frigid_prec = 10**-5
+WC = True
+x0 = 0
+u10 = 7
+u20 = 13
+Eb = 10**-5
+E = 10**-4
+bound = 0.01
+h_ = 10**-3
+N = 10000
+
+def catchParsFromCmd():
+    global x0, u10, u20, Eb, E, bound, h_, N, WC
+
+    if len(sys.argv) == 1:
+        print("программа запущена со стандартными параметрами")
+        return
+
+    x0 = float(sys.argv[1])
+    u10 = float(sys.argv[2])
+    h_ = float(sys.argv[3])
+    N = int(sys.argv[4])
+    E = float(sys.argv[5])
+    Eb = float(sys.argv[6])
+    WC = bool(int(sys.argv[7]))
+    #A = float(sys.argv[8])
+    #B = float(sys.argv[9])
+    #C = float(sys.argv[10])
+    #taskType = sys.argv[11]
+    bound = float(sys.argv[12])
+    u20 = float(sys.argv[13])
+
+def savetodb():
+    connection = sqlite3.connect("../database/lab1.sqlite3")
+    cursor = connection.cursor()
+
+    for i in range(len(xi)):
+        cursor.executemany("insert into main2 values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            [[v2i[i], x0, u10, i, xi[i], v1i[i], v12i[i], abs(v1i[i]-v12i[i]), olp1i[i],
+                            hi[i], c2i[i], c1i[i], u20]])
+
+        cursor.executemany("insert into main2der values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            [[v2i[i], x0, u10, i, xi[i], v2i[i], v22i[i], abs(v2i[i]-v22i[i]), olp2i[i],
+                            hi[i], c2i[i], c1i[i], u20]])
+
 
 def savevalwc(xi_, v1i_, v2i_, v12i_, v22i_, olp1i_, olp2i_, c1i_, c2i_, hi_):
     global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i
@@ -29,6 +76,7 @@ def savevalwc(xi_, v1i_, v2i_, v12i_, v22i_, olp1i_, olp2i_, c1i_, c2i_, hi_):
     c2i.append(c2i_)
     hi.append(hi_)
 
+'''
 def saveval(xi_, v1i_, v2i_, hi_):
     global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i
     xi.append(xi_)
@@ -41,6 +89,7 @@ def saveval(xi_, v1i_, v2i_, hi_):
     c1i.append(0)
     c2i.append(0)
     hi.append(hi_)
+'''
 
 def eraseEnd():
     xi.pop()
@@ -81,7 +130,16 @@ def step(f1, f2, h, x, v1, v2, wc=False):
     v2next = v2 + (h / 2) * (f2n + f2next)
     x += h
     if not wc:
-        saveval(x, v1next, v2next, h)
+        xnext, v1next, v2next = step(f1, f2, h, x, v1, v2, True)
+        x1half, v1half, v2half = step(f1, f2, h / 2, x, v1, v2, True)
+        x12next, v12next, v22next = step(f1, f2, h, x1half, v1half, v2half, True)
+        s1 = abs(v1next - v12next)
+        s2 = abs(v2next - v22next)
+        s1 /=  (2**p - 1)
+        s2 /=  (2**p - 1)
+
+        savevalwc(x, v1next, v2next, v12next, v22next, s1, s2, 0, 0, h)
+
     return x, v1next, v2next
 
 def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
@@ -92,11 +150,11 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
     s2 = abs(v2next - v22next)
     s = max(s1, s2)
     minbound = e / (2**p - 1)
-
     divisions = 0
+    s1 /=  (2**p - 1)
+    s2 /=  (2**p - 1)
 
     while h >= 2. / maxeabs_ - frigid_prec:
-        print(10000)
         h /= 2
         divisions += 1
 
@@ -126,7 +184,7 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
         return xnext, v1next, v2next, h
 
 def RK4(f1, f2, h, x, v1, v2, n, b, eb):
-    saveval(x, v1, v2, 0)
+    savevalwc(x, v1, v2, v1, v2, 0, 0, 0, 0, h)
     oldx = x
     oldv1 = v1
     oldv2 = v2
@@ -138,10 +196,9 @@ def RK4(f1, f2, h, x, v1, v2, n, b, eb):
         elif x > b:
             eraseEnd()
             x, v1, v2 = step(f1, f2, b - oldx, oldx, oldv1, oldv2)
-            saveval(x, v1, v2, b - oldx)
 
 def RK4WC(f1, f2, h, x, v1, v2, n, b, eb, e, maxeabs_):
-    saveval(x, v1, v2, 0)
+    savevalwc(x, v1, v2, v1, v2, 0, 0, 0, 0, h)
 
     for i in range(1, n + 1):
         oldx = x
@@ -154,7 +211,6 @@ def RK4WC(f1, f2, h, x, v1, v2, n, b, eb, e, maxeabs_):
         elif x > b:
             eraseEnd()
             x, v1, v2, h = stepWC(f1, f2, b - oldx, oldx, oldv1, oldv2, e, maxeabs_)
-            saveval(x, v1, v2, h)
 
 def trueSol1(alpha_, x):
     return -alpha_[0] * np.exp(-1000.0 * x) + alpha_[1] * np.exp(-0.01 * x)
@@ -162,36 +218,29 @@ def trueSol1(alpha_, x):
 def trueSol2(alpha_, x):
     return alpha_[0] * np.exp(-1000.0 * x) + alpha_[1] * np.exp(-0.01 * x)
 
-x0 = 0
-u10 = 7
-u20 = 13
 matr = getMatr()
-print(matr)
 func1 = createfunc1(matr)
 func2 = createfunc2(matr)
 val, sup = np.linalg.eig(matr)
 maxeabs = max([abs(e) for e in val])
-print(maxeabs)
-#vec1 = [sup[0][0], sup[1][0]]
-#vec2 = [sup[0][1], sup[1][1]]
 vec1 = [-1, 1]
 vec2 = [1, 1]
 coefmatr = [[vec1[0],vec2[0]], [vec1[1],vec2[1]]]
-print(coefmatr)
-print(u10, u20)
 alpha = np.linalg.solve(coefmatr, [u10, u20])
-print("alpha  ", alpha)
-Eb = 10**-5
-E = 10**-4
-bound = 0.01
-h_ = 10**-2
-N = 100000
 
-#RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
+catchParsFromCmd()
+
+if WC:
+    RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
+else:
+    RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
+
+savetodb()
+
+
+'''
+RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
 RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
-
-#for row in zip(c1i, c2i):
-#    print(row[0], row[1])
 
 plt.figure(figsize=(12, 5))
 
@@ -211,6 +260,5 @@ plt.subplot(144)
 xxx = np.arange(0, 1000, 0.01)
 plt.plot(xxx, [trueSol2(alpha, i) for i in xxx])
 plt.show()
-
-
+'''
 
