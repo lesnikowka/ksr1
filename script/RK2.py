@@ -56,11 +56,11 @@ def savetodb():
     for i in range(len(xi)):
         cursor.executemany("insert into main2 values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                             [[v2i[i], x0, u10, i, xi[i], v1i[i], v12i[i], abs(v1i[i]-v12i[i]), olp1i[i],
-                            hi[i], c2i[i], c1i[i], u20]])
+                            hi[i], c1i[i], c2i[i], u20]])
 
         cursor.executemany("insert into main2der values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                             [[v2i[i], x0, u10, i, xi[i], v2i[i], v22i[i], abs(v2i[i]-v22i[i]), olp2i[i],
-                            hi[i], c2i[i], c1i[i], u20]])
+                            hi[i], c1i[i], c2i[i], u20]])
 
     connection.commit()
 
