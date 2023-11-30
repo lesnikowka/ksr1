@@ -33,8 +33,8 @@ namespace lab1_dotnet_framework
         private DataTable table = new DataTable();
         private DataTable table2 = new DataTable();
 
-        private List<string> columnNames = new List<string> { "id", "xi", "vi", "v2i", "|vi-v2i|", "|olp|", "hi", "Делений", "Удвоений", "u", "|u-v|" };
-        private List<string> columnNamesForDerivative = new List<string> { "id", "xi", "v2i", "v22i", "|v2i-v22i|", "|olp|", "hi", "Делений", "Удвоений" };
+        private List<string> columnNames = new List<string> { "id", "xi", "vi", "v2i", "|vi-v2i|", "|olp|", "hi", "Делений", "Удвоений", "u1", "|u1-v1|" };
+        private List<string> columnNamesForDerivative = new List<string> { "id", "xi", "v2i", "v22i", "|v2i-v22i|", "|olp|", "hi", "Делений", "Удвоений", "u2", "|u2-v2|" };
 
         private Dictionary<Tuple<double, double, double>, List<Series>> SeriesForStartConditions = new Dictionary<Tuple<double, double, double>, List<Series>>();
 
@@ -138,7 +138,7 @@ namespace lab1_dotnet_framework
             }
 
 
-            for (int i = 0; i < columnNames.Count - 2; i++)
+            for (int i = 0; i < columnNames.Count; i++)
             {
                 table.Columns.Add(columnNames[i], typeof(string));
             }
@@ -520,7 +520,7 @@ namespace lab1_dotnet_framework
             {
                 DataRow row = table2.NewRow();
 
-                for (int j = 0; j < columnNamesForDerivative.Count; j++)
+                for (int j = 0; j < columnNamesForDerivative.Count - 2; j++)
                 {
                     row[columnNamesForDerivative[j]] = dataForStartConditionDer[i][j + 1];
                 }
