@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace lab1_dotnet_framework
 {
@@ -298,6 +299,15 @@ namespace lab1_dotnet_framework
             }
         }
 
+        double trueSol1(double x) {
+            return -3 * Math.Exp(-1000.0 * x) + 10 * Math.Exp(-0.01 * x);
+        }
+
+        double trueSol2(double x)
+        {
+            return 3 * Math.Exp(-1000.0 * x) + 10 * Math.Exp(-0.01 * x);
+        }
+
         private string getTableString()
         {
             string tableName;
@@ -327,52 +337,54 @@ namespace lab1_dotnet_framework
             List<Series> newSeriesList = new List<Series>();
 
             Series newNumericSeries = new Series();
-            newNumericSeries.Name = "Численное решение при X0 = " + startCondition[0] + " U0 = " + startCondition[1];
+            newNumericSeries.Name = "Численное при X0 = " + startCondition[0] + " U10 = " + startCondition[1];
             if (selectedTask == TaskType.Main2)
-                newNumericSeries.Name += " U'0 = " + startCondition[2];
+                newNumericSeries.Name += " U20 = " + startCondition[2];
             newNumericSeries.ChartType = SeriesChartType.Line;
             newNumericSeries.BorderWidth = 2;
             this.chart1.Series.Add(newNumericSeries);
             newSeriesList.Add(newNumericSeries);
 
+
             Series newTrueSeries = new Series();
+            newTrueSeries.Name = "Истинное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
+            newTrueSeries.ChartType = SeriesChartType.Line;
+            newTrueSeries.BorderWidth = 2;
+            this.chart1.Series.Add(newTrueSeries);
+            newSeriesList.Add(newTrueSeries);
 
-            if (selectedTask == TaskType.Test)
-            {
-                newTrueSeries.Name = "Истинное решение при X0 = " + startCondition[0] + " U0 = " + startCondition[1];
-                newTrueSeries.ChartType = SeriesChartType.Line;
-                newTrueSeries.BorderWidth = 2;
-                this.chart1.Series.Add(newTrueSeries);
-                newSeriesList.Add(newTrueSeries);
-            }
+            Series newTrueDerivativeSeries = new Series();
+            newTrueDerivativeSeries.Name = "Истинное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
+            newTrueDerivativeSeries.ChartType = SeriesChartType.Line;
+            newTrueDerivativeSeries.BorderWidth = 2;
+            this.chart3.Series.Add(newTrueDerivativeSeries);
+            newSeriesList.Add(newTrueDerivativeSeries);
 
-            if (selectedTask == TaskType.Test)
-            {
-                DrawNumericSolution(newNumericSeries, null, null, startCondition, newTrueSeries);
-            }
-            else if (selectedTask == TaskType.Main1)
-            {
-                DrawNumericSolution(newNumericSeries, null, null, startCondition, null);
-            }
-            else
-            {
-                Series newDerivativeSeries = new Series();
-                newDerivativeSeries.Name = "Производная при X0 = " + startCondition[0] + " U0 = " + startCondition[1] + " U'0 = " + startCondition[2];
-                newDerivativeSeries.ChartType = SeriesChartType.Line;
-                newDerivativeSeries.BorderWidth = 2;
-                this.chart3.Series.Add(newDerivativeSeries);
-                newSeriesList.Add(newDerivativeSeries);
+            Series newTruePhaseSeries = new Series();
+            newTruePhaseSeries.Name = "Истинное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
+            newTruePhaseSeries.ChartType = SeriesChartType.Line;
+            newTruePhaseSeries.BorderWidth = 2;
+            this.chart2.Series.Add(newTruePhaseSeries);
+            newSeriesList.Add(newTruePhaseSeries);
 
 
-                Series newPhaseSeries = new Series();
-                newPhaseSeries.Name = "Фазовая траектория при X0 = " + startCondition[0] + " U0 = " + startCondition[1] + " U'0 = " + startCondition[2];
-                newPhaseSeries.ChartType = SeriesChartType.Line;
-                newPhaseSeries.BorderWidth = 2;
-                this.chart2.Series.Add(newPhaseSeries);
-                newSeriesList.Add(newPhaseSeries);
+            Series newDerivativeSeries = new Series();
+            newDerivativeSeries.Name = "Численное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
+            newDerivativeSeries.ChartType = SeriesChartType.Line;
+            newDerivativeSeries.BorderWidth = 2;
+            this.chart3.Series.Add(newDerivativeSeries);
+            newSeriesList.Add(newDerivativeSeries);
 
-                DrawNumericSolution(newNumericSeries, newDerivativeSeries, newPhaseSeries, startCondition, null);
-            }
+
+            Series newPhaseSeries = new Series();
+            newPhaseSeries.Name = "Численное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
+            newPhaseSeries.ChartType = SeriesChartType.Line;
+            newPhaseSeries.BorderWidth = 2;
+            this.chart2.Series.Add(newPhaseSeries);
+            newSeriesList.Add(newPhaseSeries);
+
+            DrawNumericSolution(newNumericSeries, newDerivativeSeries, newPhaseSeries, startCondition, newTrueSeries, newTrueDerivativeSeries, newTruePhaseSeries);
+            
 
             SeriesForStartConditions.Add(x0u0Tuple, newSeriesList);
 
@@ -425,58 +437,42 @@ namespace lab1_dotnet_framework
             return v0 / Math.Exp(2 * x0);
         }
 
-        private double TrueSoluitonFunction(double x0, double v0, double x)
-        {
-            return Math.Exp(2 * x) * constant(x0, v0);
-        }
-
-        private void DrawTrueSolution(Series series, double x0, double u0, List<double> X)
-        {
-
-            for (int i = 0; i < X.Count; i++)
-            {
-                series.Points.AddXY(X[i], TrueSoluitonFunction(x0, u0, X[i]));
-            }
-        }
-
-        private void DrawNumericSolution(Series mainSeries, Series derSeries, Series phaseSeries, List<string> startCondition, Series testSeries)
+        private void DrawNumericSolution(Series mainSeries, Series derSeries, Series phaseSeries, List<string> startCondition, Series trueSeries1, Series trueSeries2, Series truePhaseSeries)
         {
             string tableName = getTableString();
 
             List<List<string>> data = db.GetDataForStartCondition(tableName, startCondition);
 
-            if (selectedTask == TaskType.Test || selectedTask == TaskType.Main1)
+     
+            for (int i = 0; i < data.Count; i++)
             {
-                List<double> X = new List<double>();
-
-                for (int i = 0; i < data.Count; i++)
-                {
-                    mainSeries.Points.AddXY(stringToDouble(data[i][1]), stringToDouble(data[i][2]));
-                    X.Add(stringToDouble(data[i][1]));
-                }
-
-                if (selectedTask == TaskType.Test)
-                {
-                    DrawTrueSolution(testSeries, stringToDouble(startCondition[0]), stringToDouble(startCondition[1]), X);
-                }
+                mainSeries.Points.AddXY(stringToDouble(data[i][2]), stringToDouble(data[i][3]));
             }
-            else
+
+            for (int i = 0; i < data.Count; i++)
             {
-                for (int i = 0; i < data.Count; i++)
-                {
-                    mainSeries.Points.AddXY(stringToDouble(data[i][2]), stringToDouble(data[i][3]));
-                }
-
-                for (int i = 0; i < data.Count; i++)
-                {
-                    derSeries.Points.AddXY(stringToDouble(data[i][2]), stringToDouble(data[i][0]));
-                }
-
-                for (int i = 0; i < data.Count; i++)
-                {
-                    phaseSeries.Points.AddXY(stringToDouble(data[i][3]), stringToDouble(data[i][0]));
-                }
+                derSeries.Points.AddXY(stringToDouble(data[i][2]), stringToDouble(data[i][0]));
             }
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                phaseSeries.Points.AddXY(stringToDouble(data[i][3]), stringToDouble(data[i][0]));
+            }
+
+            List<double> X = new List<double>();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                X.Add(stringToDouble(data[i][2]));
+            }
+
+            for (int i = 0; i < X.Count; i++)
+            {
+                trueSeries1.Points.AddXY(X[i], trueSol1(X[i]));
+                trueSeries2.Points.AddXY(X[i], trueSol2(X[i]));
+                truePhaseSeries.Points.AddXY(trueSol1(X[i]), trueSol2(X[i]));
+            }
+
         }
 
         private void ShowDataForStartCondition(List<string> startCondition)

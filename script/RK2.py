@@ -77,21 +77,6 @@ def savevalwc(xi_, v1i_, v2i_, v12i_, v22i_, olp1i_, olp2i_, c1i_, c2i_, hi_):
     c2i.append(c2i_)
     hi.append(hi_)
 
-'''
-def saveval(xi_, v1i_, v2i_, hi_):
-    global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i
-    xi.append(xi_)
-    v1i.append(v1i_)
-    v2i.append(v2i_)
-    v12i.append(0)
-    v22i.append(0)
-    olp1i.append(0)
-    olp2i.append(0)
-    c1i.append(0)
-    c2i.append(0)
-    hi.append(hi_)
-'''
-
 def eraseEnd():
     global xi, v1i, v2i, v12i, v22i, olp1i, olp2i, c1i, c2i, hi
     xi.pop()
@@ -238,7 +223,7 @@ if WC:
 else:
     RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
 
-
+print(alpha)
 
 savetodb()
 
