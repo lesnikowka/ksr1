@@ -22,11 +22,11 @@ WC = True
 x0 = 0
 u10 = 7
 u20 = 13
-Eb = 10**-7
-E = 10**-4
+Eb = 0.001
+E = 0.0001
 bound = 0.01
 h_ = 10**-3
-N = 100000
+N = 15
 
 def catchParsFromCmd():
     global x0, u10, u20, Eb, E, bound, h_, N, WC
@@ -136,14 +136,22 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
     s1 = abs(v1next - v12next)
     s2 = abs(v2next - v22next)
     s = max(s1, s2)
+    s1 /= (2 ** p - 1)
+    s2 /= (2 ** p - 1)
     minbound = e / (2**p - 1)
     divisions = 0
-    s1 /=  (2**p - 1)
-    s2 /=  (2**p - 1)
 
     while h >= 2. / maxeabs_ - frigid_prec:
         h /= 2
         divisions += 1
+        xnext, v1next, v2next = step(f1, f2, h, x, v1, v2, True)
+        x1half, v1half, v2half = step(f1, f2, h / 2, x, v1, v2, True)
+        x12next, v12next, v22next = step(f1, f2, h / 2, x1half, v1half, v2half, True)
+        s1 = abs(v1next - v12next)
+        s2 = abs(v2next - v22next)
+        s = max(s1, s2)
+        s1 /= (2 ** p - 1)
+        s2 /= (2 ** p - 1)
 
     if s > minbound and s <= e:
         savevalwc(xnext, v1next, v2next, v12next, v22next, s1, s2, divisions, 0, h)
@@ -165,6 +173,8 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
             s1 = abs(v1next - v12next)
             s2 = abs(v2next - v22next)
             s = max(s1, s2)
+            s1 /= (2 ** p - 1)
+            s2 /= (2 ** p - 1)
 
         savevalwc(xnext, v1next, v2next, v12next, v22next, s1, s2, divisions, 0, h)
 
