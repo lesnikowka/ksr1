@@ -295,7 +295,7 @@ namespace lab1_dotnet_framework
 
             if (selectedTask == TaskType.Main2)
             {
-                richTextBox1.Text += "\nДля производной:\n" + getInfo(table2, cntrl == 1, true);
+                richTextBox1.Text += "\nДля U2:\n" + getInfo(table2, cntrl == 1, true);
             }
         }
 
@@ -349,23 +349,26 @@ namespace lab1_dotnet_framework
             Series newTrueSeries = new Series();
             newTrueSeries.Name = "Истинное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
             newTrueSeries.ChartType = SeriesChartType.Line;
-            newTrueSeries.BorderWidth = 2;
+            newTrueSeries.BorderWidth = 1;
             this.chart1.Series.Add(newTrueSeries);
             newSeriesList.Add(newTrueSeries);
+            newTrueSeries.BorderDashStyle = ChartDashStyle.Dash;
 
             Series newTrueDerivativeSeries = new Series();
             newTrueDerivativeSeries.Name = "Истинное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
             newTrueDerivativeSeries.ChartType = SeriesChartType.Line;
-            newTrueDerivativeSeries.BorderWidth = 2;
+            newTrueDerivativeSeries.BorderWidth = 1;
             this.chart3.Series.Add(newTrueDerivativeSeries);
             newSeriesList.Add(newTrueDerivativeSeries);
+            newTrueDerivativeSeries.BorderDashStyle = ChartDashStyle.Dash;
 
             Series newTruePhaseSeries = new Series();
             newTruePhaseSeries.Name = "Истинное при X0 = " + startCondition[0] + " U10 = " + startCondition[1] + " U20 = " + startCondition[2];
             newTruePhaseSeries.ChartType = SeriesChartType.Line;
-            newTruePhaseSeries.BorderWidth = 2;
+            newTruePhaseSeries.BorderWidth = 1;
             this.chart2.Series.Add(newTruePhaseSeries);
             newSeriesList.Add(newTruePhaseSeries);
+            newTruePhaseSeries.BorderDashStyle = ChartDashStyle.Dash;
 
 
             Series newDerivativeSeries = new Series();
