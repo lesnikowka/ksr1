@@ -222,7 +222,19 @@ namespace lab1_dotnet_framework
 
             return 0;
         }
-        
+        private Bitmap ConvertToBitmap(string fileName)
+        {
+            Bitmap bitmap;
+            using (Stream bmpStream = System.IO.File.Open(fileName, System.IO.FileMode.Open))
+            {
+                Image image = Image.FromStream(bmpStream);
+
+                bitmap = new Bitmap(image);
+
+            }
+            return bitmap;
+        }
+
         private void executeMethod()
         {
             ProcessStartInfo deleteInfoStartProcess = new ProcessStartInfo();
@@ -276,10 +288,15 @@ namespace lab1_dotnet_framework
             methodProcess.Start();
             methodProcess.WaitForExit();
 
-            var graphImg = new Bitmap(Directory.GetCurrentDirectory() + "/../../../script/graph.png");
+
+
+            //var graphImg = new Bitmap(Directory.GetCurrentDirectory() + "/../../../script/graph.png");
+            var graphImg = ConvertToBitmap(Directory.GetCurrentDirectory() + "/../../../script/graph.png");
             double mult = 0.65 * 4.0 / 3.0;
             Bitmap resized = new Bitmap(graphImg, new Size((int)(graphImg.Width * mult), (int)(graphImg.Height * mult)));
             pictureBox1.Image = resized;
+
+            
 
             bool onlyMat = checkBox2.Checked;
 
