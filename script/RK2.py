@@ -24,9 +24,9 @@ u10 = 7
 u20 = 13
 Eb = 0.001
 E = 0.0001
-bound = 10000
+bound = 100000
 h_ = 0.001
-N = 10000000
+N = 100000
 
 def catchParsFromCmd():
     global x0, u10, u20, Eb, E, bound, h_, N, WC
@@ -239,25 +239,32 @@ savetodb()
 
 #RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
 #RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
-'''
-plt.figure(figsize=(12, 5))
+
+plt.figure(figsize=(18,9))
 
 y1 = [trueSol1(alpha, xx) for xx in xi]
 y2 = [trueSol2(alpha, xx) for xx in xi]
 
 
-plt.subplot(141)
-plt.plot(xi, v1i)
-plt.plot(xi, y1)
-plt.subplot(142)
-plt.plot(xi, v2i)
-plt.plot(xi, y2)
-plt.subplot(143)
-plt.plot(v1i, v2i)
-plt.plot(y1, y2)
-plt.subplot(144)
-xxx = np.arange(0, 1000, 0.01)
-plt.plot(xxx, [trueSol2(alpha, i) for i in xxx])
-plt.show()
-'''
+plt.subplot(131)
+plt.title("v1(x)")
+plt.plot(xi, v1i, label="Численное решение")
+plt.plot(xi, y1,linestyle='--', label="Истинное решение")
+plt.legend()
+
+plt.subplot(132)
+plt.title("v2(x)")
+plt.plot(xi, v2i, label="Численное решение")
+plt.plot(xi, y2,linestyle='--', label="Истинное решение")
+plt.legend()
+
+plt.subplot(133)
+plt.title("v2(v1)")
+plt.plot(v1i, v2i, label="Численное решение")
+plt.plot(y1, y2, linestyle='--', label="Истинное решение")
+plt.legend()
+
+plt.savefig("graph.png")
+
+#plt.show()
 

@@ -266,6 +266,8 @@ namespace lab1_dotnet_framework
             args += toStringPoint(integrationBound) + " ";
             args += toStringPoint(U0der) + " ";
 
+            pictureBox1.Image = null;
+
             ProcessStartInfo infoStartProcess = new ProcessStartInfo();
 
             Process methodProcess = new Process();
@@ -281,9 +283,24 @@ namespace lab1_dotnet_framework
 
             methodProcess.WaitForExit();
 
+            System.GC.Collect();
+
             ShowDataForStartCondition(doubleConditionsToList(X0, U0, U0der));
 
+            System.GC.Collect();
+
+            var graphImg = new Bitmap(Directory.GetCurrentDirectory() + "/../../../script/graph.png");
+
+            double mult = 0.65 * 4.0 / 3.0;
+
+            Bitmap resized = new Bitmap(graphImg, new Size((int)(graphImg.Width * mult), (int)(graphImg.Height * mult)));
+
+            pictureBox1.Image = resized;
+
+
             drawGraphs(doubleConditionsToList(X0, U0, U0der));
+
+            System.GC.Collect();
 
             int cntrl = checkBox1.Checked ? 1 : 0;
 
@@ -295,9 +312,13 @@ namespace lab1_dotnet_framework
 
             richTextBox1.Text = getInfo(table, cntrl == 1);
 
+            System.GC.Collect();
+
             if (selectedTask == TaskType.Main2)
             {
                 richTextBox1.Text += "\nДля U2:\n" + getInfo(table2, cntrl == 1, true);
+
+                System.GC.Collect();
             }
         }
 
