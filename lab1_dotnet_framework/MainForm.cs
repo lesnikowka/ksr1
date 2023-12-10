@@ -16,6 +16,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
+using System.Net.NetworkInformation;
 
 namespace lab1_dotnet_framework
 {
@@ -446,36 +448,21 @@ namespace lab1_dotnet_framework
 
             List<List<string>> data = db.GetDataForStartCondition(tableName, startCondition);
 
-     
-            for (int i = 0; i < data.Count; i++)
-            {
-                mainSeries.Points.AddXY(stringToDouble(data[i][2]), stringToDouble(data[i][3]));
-            }
 
             for (int i = 0; i < data.Count; i++)
             {
-                derSeries.Points.AddXY(stringToDouble(data[i][2]), stringToDouble(data[i][0]));
+                double xi = stringToDouble(data[i][2]);
+                double y1i = stringToDouble(data[i][3]);
+                double y2i = stringToDouble(data[i][0]);
+
+                mainSeries.Points.AddXY(xi, y1i);
+                derSeries.Points.AddXY(xi, y2i);
+                phaseSeries.Points.AddXY(y1i, y2i);
+
+                trueSeries1.Points.AddXY(xi, trueSol1(xi));
+                trueSeries2.Points.AddXY(xi, trueSol2(xi));
+                truePhaseSeries.Points.AddXY(trueSol1(xi), trueSol2(xi));
             }
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                phaseSeries.Points.AddXY(stringToDouble(data[i][3]), stringToDouble(data[i][0]));
-            }
-
-            List<double> X = new List<double>();
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                X.Add(stringToDouble(data[i][2]));
-            }
-
-            for (int i = 0; i < X.Count; i++)
-            {
-                trueSeries1.Points.AddXY(X[i], trueSol1(X[i]));
-                trueSeries2.Points.AddXY(X[i], trueSol2(X[i]));
-                truePhaseSeries.Points.AddXY(trueSol1(X[i]), trueSol2(X[i]));
-            }
-
         }
 
         private void ShowDataForStartCondition(List<string> startCondition)
@@ -609,7 +596,7 @@ namespace lab1_dotnet_framework
 
             if(!onlyOlp) resultInfo += "n = " + n.ToString() + "\n";
             if (!onlyOlp) resultInfo += "b - xn = " + bxn.ToString() + "\n";
-            if(cntrl) resultInfo += "Макс. ОЛП = " + maxOlp.ToString() + "\n";
+            resultInfo += "Макс. ОЛП = " + maxOlp.ToString() + "\n";
             if (!onlyOlp) if (cntrl) resultInfo += "Удвоений: " + C2sum.ToString() + "\n";
             if (!onlyOlp) if (cntrl) resultInfo += "Делений: " + C1sum.ToString() + "\n";
             if (!onlyOlp) if (cntrl) resultInfo += "Минимальный шаг: " + minHi.ToString() + " при x = " + minHiXi.ToString() + "\n";

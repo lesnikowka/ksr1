@@ -18,15 +18,15 @@ c1i = []
 c2i = []
 hi = []
 
-WC = True
+WC = False
 x0 = 0
 u10 = 7
 u20 = 13
 Eb = 0.001
 E = 0.0001
-bound = 0.01
-h_ = 10**-3
-N = 15
+bound = 10000
+h_ = 0.001
+N = 10000000
 
 def catchParsFromCmd():
     global x0, u10, u20, Eb, E, bound, h_, N, WC
