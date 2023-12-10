@@ -281,6 +281,14 @@ b - xn = %
 Макс. ОЛП = %
 '''
 
+infoText = '''
+n = %
+b - xn = %
+Макс. ОЛП = % при x = %
+Для U2:
+Макс. ОЛП = %
+'''
+
 def fillInfo(src, data):
         text = src
         for val in data:
@@ -288,7 +296,7 @@ def fillInfo(src, data):
         return text
 
 
-infoN = len(xi)
+infoN = len(xi) - 1
 infoBxn = bound - xi[len(xi)-1]
 infoMaxOlp1 = max(olp1i)
 infoMaxOlp1X = xi[olp1i.index(infoMaxOlp1)]
@@ -301,9 +309,15 @@ infoMinHiXi = xi[hi.index(infoMinHi)]
 infoMaxHi = max(hi)
 infoMaxHiXi = xi[hi.index(infoMaxHi)]
 
-f = open("info.txt", 'w')
+f = open("info.txt", mode='w', encoding="utf-8")
 
 if (WC):
 	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1, 
-		infoMaxOlp1X, infoC1, infoC2, infoMinHi, infoMinHiXi,
+		infoMaxOlp1X, infoC2, infoC1, infoMinHi, infoMinHiXi,
 		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X ]))
+
+else:
+	f.write(fillInfo(infoText, [infoN, infoBxn, infoMaxOlp1, 
+		infoMaxOlp1X, infoMaxOlp2, infoMaxOlp2X ]))
+
+f.close()

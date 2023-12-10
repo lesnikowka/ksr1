@@ -295,16 +295,7 @@ namespace lab1_dotnet_framework
 
             int cntrl = checkBox1.Checked ? 1 : 0;
 
-            richTextBox1.Text = getInfo(table, cntrl == 1);
-
-            System.GC.Collect();
-
-            if (selectedTask == TaskType.Main2)
-            {
-                richTextBox1.Text += "\nДля U2:\n" + getInfo(table2, cntrl == 1, true);
-
-                System.GC.Collect();
-            }
+            richTextBox1.Text = getInfo();
         }
 
         double trueSol1(double x) {
@@ -544,76 +535,11 @@ namespace lab1_dotnet_framework
             return startCondition;
         }
 
-        private string getInfo(DataTable curTable, bool cntrl, bool onlyOlp = false)
+        private string getInfo()
         {
-            if (curTable.Rows.Count == 0)
-            {
-                return "";
-            }
+            string text = File.ReadAllText((Directory.GetCurrentDirectory() + "/../../../script/info.txt"), Encoding.UTF8);
 
-            int n = curTable.Rows.Count, C1sum = 0, C2sum = 0, maxHiXi = 0, minHiXi = 0, maxuiviXi = 0;
-
-            string s = table.Rows[0][6].ToString();
-
-            double maxHi = Convert.ToDouble(curTable.Rows[0][6].ToString(), CultureInfo.InvariantCulture);
-            double minHi = Convert.ToDouble(curTable.Rows[0][6].ToString(), CultureInfo.InvariantCulture);
-            double maxOlp = 0;
-            double maxuivi = 0;
-            double xn = Convert.ToDouble(curTable.Rows[curTable.Rows.Count - 1][1].ToString(), CultureInfo.InvariantCulture);
-            double bxn = Convert.ToDouble(pointsToCommas(textBox7.Text)) - xn;
-
-            string resultInfo = "";
-
-            for (int i = 0; i < curTable.Rows.Count; i++)
-            {
-
-
-                C1sum += Convert.ToInt32(curTable.Rows[i][7]);
-                C2sum += Convert.ToInt32(curTable.Rows[i][8]);
-
-                double hitmp = Convert.ToDouble(curTable.Rows[i][6].ToString(), CultureInfo.InvariantCulture);
-
-                if (hitmp > maxHi)
-                {
-                    maxHi = hitmp;
-                    maxHiXi = i + 1;
-                }
-                if (hitmp < minHi)
-                {
-                    minHi = hitmp;
-                    minHiXi = i + 1;
-                }
-                
-                double olptmp = Convert.ToDouble(curTable.Rows[i][5].ToString(), CultureInfo.InvariantCulture);
-
-                maxOlp = Math.Abs(olptmp) > maxOlp ? Math.Abs(olptmp) : maxOlp;
-
-                if (selectedTask == TaskType.Test)
-                {
-                    double uivitmp = Convert.ToDouble(curTable.Rows[i][10].ToString(), CultureInfo.InvariantCulture);
-
-                    if (Math.Abs(uivitmp) > maxuivi)
-                    {
-                        maxuivi = Math.Abs(uivitmp);
-                        maxuiviXi = i + 1;
-                    }
-                }
-            }
-
-            if(!onlyOlp) resultInfo += "n = " + n.ToString() + "\n";
-            if (!onlyOlp) resultInfo += "b - xn = " + bxn.ToString() + "\n";
-            resultInfo += "Макс. ОЛП = " + maxOlp.ToString() + "\n";
-            if (!onlyOlp) if (cntrl) resultInfo += "Удвоений: " + C2sum.ToString() + "\n";
-            if (!onlyOlp) if (cntrl) resultInfo += "Делений: " + C1sum.ToString() + "\n";
-            if (!onlyOlp) if (cntrl) resultInfo += "Минимальный шаг: " + minHi.ToString() + " при x = " + minHiXi.ToString() + "\n";
-            if (!onlyOlp) if (cntrl) resultInfo += "Максимальный шаг: " + maxHi.ToString() + " при x = " + maxHiXi.ToString() + "\n";
-            
-            if (selectedTask == TaskType.Test)
-            {
-                resultInfo += "Максимальный ui - vi: " + maxuivi.ToString() + " при x = " + maxuiviXi.ToString() + "\n";
-            }
-
-            return resultInfo;
+            return text;
         }
 
         private void button1_Click(object sender, EventArgs e)
