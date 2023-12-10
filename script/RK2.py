@@ -18,7 +18,7 @@ c1i = []
 c2i = []
 hi = []
 
-WC = False
+WC = True
 x0 = 0
 u10 = 7
 u20 = 13
@@ -268,3 +268,42 @@ plt.savefig("graph.png")
 
 #plt.show()
 
+infoTextWC = '''
+n = %
+b - xn = %
+Макс. ОЛП = % при x = %
+Удвоений: %
+Делений: %
+Минимальный шаг: % при x = %
+Максимальный шаг: % при x = %
+
+Для U2:
+Макс. ОЛП = %
+'''
+
+def fillInfo(src, data):
+        text = src
+        for val in data:
+            text = text.replace("%", str(val), 1)
+        return text
+
+
+infoN = len(xi)
+infoBxn = bound - xi[len(xi)-1]
+infoMaxOlp1 = max(olp1i)
+infoMaxOlp1X = xi[olp1i.index(infoMaxOlp1)]
+infoMaxOlp2 = max(olp2i)
+infoMaxOlp2X = xi[olp2i.index(infoMaxOlp2)]
+infoC1 = sum(c1i)
+infoC2 = sum(c2i)
+infoMinHi = min(hi)
+infoMinHiXi = xi[hi.index(infoMinHi)]
+infoMaxHi = max(hi)
+infoMaxHiXi = xi[hi.index(infoMaxHi)]
+
+f = open("info.txt", 'w')
+
+if (WC):
+	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1, 
+		infoMaxOlp1X, infoC1, infoC2, infoMinHi, infoMinHiXi,
+		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X ]))

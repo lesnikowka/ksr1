@@ -266,49 +266,34 @@ namespace lab1_dotnet_framework
             args += toStringPoint(integrationBound) + " ";
             args += toStringPoint(U0der) + " ";
 
-            pictureBox1.Image = null;
-
             ProcessStartInfo infoStartProcess = new ProcessStartInfo();
-
             Process methodProcess = new Process();
-
             infoStartProcess.WorkingDirectory = Directory.GetCurrentDirectory() + getScriptFolder();
             infoStartProcess.FileName = "RK2.py";
             infoStartProcess.Arguments = args;
             infoStartProcess.WindowStyle = ProcessWindowStyle.Hidden;
-
             methodProcess.StartInfo = infoStartProcess;
-
             methodProcess.Start();
-
             methodProcess.WaitForExit();
 
-            System.GC.Collect();
-
-            ShowDataForStartCondition(doubleConditionsToList(X0, U0, U0der));
-
-            System.GC.Collect();
-
             var graphImg = new Bitmap(Directory.GetCurrentDirectory() + "/../../../script/graph.png");
-
             double mult = 0.65 * 4.0 / 3.0;
-
             Bitmap resized = new Bitmap(graphImg, new Size((int)(graphImg.Width * mult), (int)(graphImg.Height * mult)));
-
             pictureBox1.Image = resized;
 
+            bool onlyMat = checkBox2.Checked;
 
-            drawGraphs(doubleConditionsToList(X0, U0, U0der));
+            if (!onlyMat)
+            {
+                System.GC.Collect();
+                ShowDataForStartCondition(doubleConditionsToList(X0, U0, U0der));
+                System.GC.Collect();
+                drawGraphs(doubleConditionsToList(X0, U0, U0der));
+            }
 
             System.GC.Collect();
 
             int cntrl = checkBox1.Checked ? 1 : 0;
-
-            //db.SaveParameters(new List<string> { toStringPoint(X0), toStringPoint(U0), toStringPoint(U0der), toStringPoint(integrationBound),
-            //    toStringPoint(startStep), toStringPoint(localPrecision), toStringPoint(boundPrecision),
-            //    maxStepNumbers.ToString(), toStringPoint(a), toStringPoint(b), toStringPoint(c), cntrl.ToString()
-            //}, tableName);
-
 
             richTextBox1.Text = getInfo(table, cntrl == 1);
 
