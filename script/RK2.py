@@ -278,7 +278,10 @@ b - xn = %
 Максимальный шаг: % при x = %
 
 Для U2:
-Макс. ОЛП = %
+Макс. ОЛП = % при x = %
+
+v1n = %
+v2n = %
 '''
 
 infoText = '''
@@ -286,7 +289,10 @@ n = %
 b - xn = %
 Макс. ОЛП = % при x = %
 Для U2:
-Макс. ОЛП = %
+Макс. ОЛП = % при x = %
+
+v1n = %
+v2n = %
 '''
 
 def fillInfo(src, data):
@@ -314,10 +320,12 @@ f = open("info.txt", mode='w', encoding="utf-8")
 if (WC):
 	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1, 
 		infoMaxOlp1X, infoC2, infoC1, infoMinHi, infoMinHiXi,
-		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X ]))
+		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X,
+		v1i[len(v1i) - 1], v2i[len(v2i) - 1]]))
 
 else:
 	f.write(fillInfo(infoText, [infoN, infoBxn, infoMaxOlp1, 
-		infoMaxOlp1X, infoMaxOlp2, infoMaxOlp2X ]))
+		infoMaxOlp1X, infoMaxOlp2, infoMaxOlp2X,
+		v1i[len(v1i) - 1], v2i[len(v2i) - 1] ]))
 
 f.close()
