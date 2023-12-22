@@ -24,9 +24,9 @@ u10 = 7
 u20 = 13
 Eb = 0.001
 E = 0.0001
-bound = 100000
+bound = 1000
 h_ = 0.001
-N = 100000
+N = 1000000
 
 def catchParsFromCmd():
     global x0, u10, u20, Eb, E, bound, h_, N, WC
@@ -117,27 +117,27 @@ def step(f1, f2, h, x, v1, v2, wc=False):
     v2next = v2 + (h / 2) * (f2n + f2next)
     x += h
     if not wc:
-        xnext, v1next, v2next = step(f1, f2, h, x, v1, v2, True)
-        x1half, v1half, v2half = step(f1, f2, h / 2, x, v1, v2, True)
-        x12next, v12next, v22next = step(f1, f2, h, x1half, v1half, v2half, True)
-        s1 = abs(v1next - v12next)
-        s2 = abs(v2next - v22next)
+        xnext_, v1next_, v2next_ = step(f1, f2, h, x - h, v1, v2, True)
+        x1half_, v1half_, v2half_ = step(f1, f2, h / 2, x - h, v1, v2, True)
+        x12next_, v12next_, v22next_ = step(f1, f2, h / 2, x1half_, v1half_, v2half_, True)
+        s1 = abs(v1next_ - v12next_)
+        s2 = abs(v2next_ - v22next_)
         s1 /=  (2**p - 1)
         s2 /=  (2**p - 1)
 
-        savevalwc(x, v1next, v2next, v12next, v22next, s1, s2, 0, 0, h)
+        savevalwc(x, v1next_, v2next_, v12next_, v22next_, s1, s2, 0, 0, h)
 
     return x, v1next, v2next
 
 def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
     xnext, v1next, v2next = step(f1, f2, h, x, v1, v2, True)
     x1half, v1half, v2half  = step(f1, f2, h / 2, x, v1, v2, True)
-    x12next, v12next, v22next = step(f1, f2, h, x1half, v1half, v2half, True)
+    x12next, v12next, v22next = step(f1, f2, h / 2, x1half, v1half, v2half, True)
     s1 = abs(v1next - v12next)
     s2 = abs(v2next - v22next)
-    s = max(s1, s2)
     s1 /= (2 ** p - 1)
     s2 /= (2 ** p - 1)
+    s = max(s1, s2)
     minbound = e / (2**p - 1)
     divisions = 0
 
@@ -149,9 +149,9 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
         x12next, v12next, v22next = step(f1, f2, h / 2, x1half, v1half, v2half, True)
         s1 = abs(v1next - v12next)
         s2 = abs(v2next - v22next)
-        s = max(s1, s2)
         s1 /= (2 ** p - 1)
         s2 /= (2 ** p - 1)
+        s = max(s1, s2)
 
     if s > minbound and s <= e:
         savevalwc(xnext, v1next, v2next, v12next, v22next, s1, s2, divisions, 0, h)
@@ -172,9 +172,9 @@ def stepWC(f1, f2, h, x, v1, v2, e, maxeabs_):
             x12next, v12next, v22next = step(f1, f2, h / 2, x1half, v1half, v2half, True)
             s1 = abs(v1next - v12next)
             s2 = abs(v2next - v22next)
-            s = max(s1, s2)
             s1 /= (2 ** p - 1)
             s2 /= (2 ** p - 1)
+            s = max(s1, s2)
 
         savevalwc(xnext, v1next, v2next, v12next, v22next, s1, s2, divisions, 0, h)
 
@@ -186,7 +186,7 @@ def RK4(f1, f2, h, x, v1, v2, n, b, eb):
     oldv1 = v1
     oldv2 = v2
 
-    for i in range(1, n + 1):
+    for i in range(n):
         x, v1, v2 = step(f1, f2, h, x, v1, v2)
         if f1(x, v1, v2) > max_der or f2(x, v1, v2) > max_der or x >= b - eb and x <= b:
             return
@@ -197,7 +197,7 @@ def RK4(f1, f2, h, x, v1, v2, n, b, eb):
 def RK4WC(f1, f2, h, x, v1, v2, n, b, eb, e, maxeabs_):
     savevalwc(x, v1, v2, v1, v2, 0, 0, 0, 0, h)
 
-    for i in range(1, n + 1):
+    for i in range(n):
         oldx = x
         oldv1 = v1
         oldv2 = v2
@@ -236,9 +236,6 @@ else:
 print(alpha)
 
 savetodb()
-
-#RK4(func1, func2, h_, x0, u10, u20, N, bound, Eb)
-#RK4WC(func1, func2, h_, x0, u10, u20, N, bound, Eb, E, maxeabs)
 
 plt.figure(figsize=(18,9))
 
