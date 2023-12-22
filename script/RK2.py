@@ -235,28 +235,32 @@ else:
 
 print(alpha)
 
-savetodb()
-
-plt.figure(figsize=(18,9))
-
 y1 = [trueSol1(alpha, xx) for xx in xi]
 y2 = [trueSol2(alpha, xx) for xx in xi]
 
 
+plt.figure(figsize=(18,9))
+
 plt.subplot(131)
 plt.title("v1(x)")
+plt.xlabel("x")
+plt.ylabel("v1")
 plt.plot(xi, v1i, label="Численное решение")
 plt.plot(xi, y1,linestyle='--', label="Истинное решение")
 plt.legend()
 
 plt.subplot(132)
 plt.title("v2(x)")
+plt.xlabel("x")
+plt.ylabel("v2")
 plt.plot(xi, v2i, label="Численное решение")
 plt.plot(xi, y2,linestyle='--', label="Истинное решение")
 plt.legend()
 
 plt.subplot(133)
 plt.title("v2(v1)")
+plt.xlabel("v1")
+plt.ylabel("v2")
 plt.plot(v1i, v2i, label="Численное решение")
 plt.plot(y1, y2, linestyle='--', label="Истинное решение")
 plt.legend()
@@ -269,6 +273,7 @@ infoTextWC = '''
 n = %
 b - xn = %
 Макс. ОЛП = % при x = %
+Макс. глоб. погрешность = %
 Удвоений: %
 Делений: %
 Минимальный шаг: % при x = %
@@ -276,7 +281,7 @@ b - xn = %
 
 Для U2:
 Макс. ОЛП = % при x = %
-
+Макс. глоб. погрешность = %
 v1n = %
 v2n = %
 xn = %
@@ -286,9 +291,11 @@ infoText = '''
 n = %
 b - xn = %
 Макс. ОЛП = % при x = %
+Макс. глоб. погрешность = %
+
 Для U2:
 Макс. ОЛП = % при x = %
-
+Макс. глоб. погрешность = %
 v1n = %
 v2n = %
 xn = %
@@ -314,17 +321,32 @@ infoMinHiXi = xi[hi.index(infoMinHi)]
 infoMaxHi = max(hi)
 infoMaxHiXi = xi[hi.index(infoMaxHi)]
 
+
+max_glob = 0
+max_glob2 = 0
+
+for i in range(len(v1i)):
+    max_glob = max(max_glob, abs(v1i[i]-y1[i]))
+    max_glob2 = max(max_glob, abs(v2i[i]-y2[i]))
+
 f = open("info.txt", mode='w', encoding="utf-8")
 
 if WC:
-	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1, 
-		infoMaxOlp1X, infoC2, infoC1, infoMinHi, infoMinHiXi,
-		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X,
+	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1,
+		infoMaxOlp1X, max_glob, infoC2, infoC1, infoMinHi, infoMinHiXi,
+		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X, max_glob2,
 		v1i[len(v1i) - 1], v2i[len(v2i) - 1], xi[len(xi)-1]]))
 
 else:
 	f.write(fillInfo(infoText, [infoN, infoBxn, infoMaxOlp1, 
-		infoMaxOlp1X, infoMaxOlp2, infoMaxOlp2X,
+		infoMaxOlp1X, max_glob, infoMaxOlp2, infoMaxOlp2X, max_glob2,
 		v1i[len(v1i) - 1], v2i[len(v2i) - 1], xi[len(xi)-1] ]))
 
 f.close()
+
+
+for i in range(len(olp1i)):
+    olp1i[i] = abs(y1[i]-v1i[i])
+    olp2i[i] = abs(y2[i]-v2i[i])
+
+savetodb()
