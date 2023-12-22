@@ -24,9 +24,9 @@ u10 = 7
 u20 = 13
 Eb = 0.001
 E = 0.0001
-bound = 1000
+bound = 0.01
 h_ = 0.001
-N = 1000000
+N = 100000
 
 def catchParsFromCmd():
     global x0, u10, u20, Eb, E, bound, h_, N, WC
