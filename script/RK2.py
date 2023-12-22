@@ -279,6 +279,7 @@ b - xn = %
 
 v1n = %
 v2n = %
+xn = %
 '''
 
 infoText = '''
@@ -290,6 +291,7 @@ b - xn = %
 
 v1n = %
 v2n = %
+xn = %
 '''
 
 def fillInfo(src, data):
@@ -314,15 +316,15 @@ infoMaxHiXi = xi[hi.index(infoMaxHi)]
 
 f = open("info.txt", mode='w', encoding="utf-8")
 
-if (WC):
+if WC:
 	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1, 
 		infoMaxOlp1X, infoC2, infoC1, infoMinHi, infoMinHiXi,
 		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X,
-		v1i[len(v1i) - 1], v2i[len(v2i) - 1]]))
+		v1i[len(v1i) - 1], v2i[len(v2i) - 1], xi[len(xi)-1]]))
 
 else:
 	f.write(fillInfo(infoText, [infoN, infoBxn, infoMaxOlp1, 
 		infoMaxOlp1X, infoMaxOlp2, infoMaxOlp2X,
-		v1i[len(v1i) - 1], v2i[len(v2i) - 1] ]))
+		v1i[len(v1i) - 1], v2i[len(v2i) - 1], xi[len(xi)-1] ]))
 
 f.close()
