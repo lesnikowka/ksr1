@@ -35,8 +35,8 @@ namespace lab1_dotnet_framework
         private DataTable table = new DataTable();
         private DataTable table2 = new DataTable();
 
-        private List<string> columnNames = new List<string> { "id", "xi", "vi", "v2i", "|vi-v2i|", "|olp|", "hi", "Делений", "Удвоений", "u", "|u-v|" };
-        private List<string> columnNamesForDerivative = new List<string> { "id", "xi", "v2i", "v22i", "|v2i-v22i|", "|olp|", "hi", "Делений", "Удвоений" };
+        private List<string> columnNames = new List<string> { "id", "xi", "vi", "v2i", "|vi-v2i|", "|глоб. погр.|", "hi", "Делений", "Удвоений", "u", "|u-v|" };
+        private List<string> columnNamesForDerivative = new List<string> { "id", "xi", "v2i", "v22i", "|v2i-v22i|", "|глоб. погр.|", "hi", "Делений", "Удвоений" };
 
         private Dictionary<Tuple<double, double, double>, List<Series>> SeriesForStartConditions = new Dictionary<Tuple<double, double, double>, List<Series>>();
 
@@ -153,13 +153,13 @@ namespace lab1_dotnet_framework
             dataGridView1.DataSource = table;
             dataGridView2.DataSource = table2;
 
-            dataGridView1.Columns["|olp|"].Width = 200; 
+            dataGridView1.Columns["|глоб. погр.|"].Width = 200; 
             dataGridView1.Columns["|vi-v2i|"].Width = 200; 
             dataGridView1.Columns["id"].Width = 100; 
             dataGridView1.Columns["Делений"].Width = 95; 
             dataGridView1.Columns["Удвоений"].Width = 95;
 
-            dataGridView2.Columns["|olp|"].Width = 200;
+            dataGridView2.Columns["|глоб. погр.|"].Width = 200;
             dataGridView2.Columns["|v2i-v22i|"].Width = 200;
             dataGridView2.Columns["id"].Width = 100;
             dataGridView2.Columns["Делений"].Width = 95;

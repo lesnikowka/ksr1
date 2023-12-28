@@ -273,7 +273,7 @@ infoTextWC = '''
 n = %
 b - xn = %
 Макс. ОЛП = % при x = %
-Макс. глоб. погрешность = %
+Макс. глоб. погрешность = % при x = %
 Удвоений: %
 Делений: %
 Минимальный шаг: % при x = %
@@ -281,7 +281,7 @@ b - xn = %
 
 Для U2:
 Макс. ОЛП = % при x = %
-Макс. глоб. погрешность = %
+Макс. глоб. погрешность = % при x = %
 v1n = %
 v2n = %
 xn = %
@@ -291,11 +291,11 @@ infoText = '''
 n = %
 b - xn = %
 Макс. ОЛП = % при x = %
-Макс. глоб. погрешность = %
+Макс. глоб. погрешность = % при x = %
 
 Для U2:
 Макс. ОЛП = % при x = %
-Макс. глоб. погрешность = %
+Макс. глоб. погрешность = % при x = %
 v1n = %
 v2n = %
 xn = %
@@ -324,22 +324,28 @@ infoMaxHiXi = xi[hi.index(infoMaxHi)]
 
 max_glob = 0
 max_glob2 = 0
+max_glob_x = 0
+max_glob2_x = 0
 
 for i in range(len(v1i)):
-    max_glob = max(max_glob, abs(v1i[i]-y1[i]))
-    max_glob2 = max(max_glob, abs(v2i[i]-y2[i]))
+    if max_glob < abs(v1i[i]-y1[i]):
+        max_glob = abs(v1i[i]-y1[i])
+        max_glob_x = xi[i]
+    if max_glob2 < abs(v2i[i]-y2[i]):
+        max_glob2 = abs(v2i[i]-y2[i])
+        max_glob2_x = xi[i]
 
 f = open("info.txt", mode='w', encoding="utf-8")
 
 if WC:
 	f.write(fillInfo(infoTextWC, [infoN, infoBxn, infoMaxOlp1,
-		infoMaxOlp1X, max_glob, infoC2, infoC1, infoMinHi, infoMinHiXi,
-		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X, max_glob2,
+		infoMaxOlp1X, max_glob, max_glob_x, infoC2, infoC1, infoMinHi, infoMinHiXi,
+		infoMaxHi, infoMaxHiXi, infoMaxOlp2, infoMaxOlp2X, max_glob2, max_glob2_x,
 		v1i[len(v1i) - 1], v2i[len(v2i) - 1], xi[len(xi)-1]]))
 
 else:
 	f.write(fillInfo(infoText, [infoN, infoBxn, infoMaxOlp1, 
-		infoMaxOlp1X, max_glob, infoMaxOlp2, infoMaxOlp2X, max_glob2,
+		infoMaxOlp1X, max_glob, max_glob_x, infoMaxOlp2, infoMaxOlp2X, max_glob2, max_glob2_x,
 		v1i[len(v1i) - 1], v2i[len(v2i) - 1], xi[len(xi)-1] ]))
 
 f.close()
